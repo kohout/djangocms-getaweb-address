@@ -1,0 +1,14 @@
+{% load cmsaddress %}
+
+{% include 'djangocms_address/gmap.html' %}
+
+<h1>{{ object.get_name }}</h1>
+{{ object|render_logo }}
+<p>{{ object.formatted_address }}</p>
+<p>{{ object.description }}</p>
+<p><a href="{{ object.link }}" target="_blank">{{ object.link }}</a></p>
+<p>
+  {% for tag in object.tags.all %}
+    {{ tag }}{% if not forloop.last %}, {% endif %}
+  {% endfor %}
+</p>

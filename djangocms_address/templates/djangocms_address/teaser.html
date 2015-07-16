@@ -1,8 +1,12 @@
-{% load cmsaddress %}
+{% load cmsaddress i18n %}
 
-<div class="row">
+<div class="djangocms_address_teaser_container">
   {% for item in items %}
-    <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="djangocms_address_teaser"
+        data-name="{{ item.get_name }}" data-url="{{ item.get_absolute_url }}"
+        data-lat="{{ item.latitude|stringformat:'f' }}" data-lng="{{ item.longitude|stringformat:'f' }}"
+        data-description="{{ item.description }}" data-formaddr="{{ item.formatted_address }}"
+        >
       {{ item|render_logo }}
       <a href="{{ item.get_absolute_url }}">
         <b>{{ item.get_name }}</b>
@@ -11,6 +15,12 @@
         <p>{{ item.formatted_address }}</p>
       {% endif %}
       <p>{{ item.description }}</p>
+      {% if item.tags %}
+        {% trans 'Tags:' %}
+        {% for tag in item.tags.all %}
+          {{ tag.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      {% endif %}
     </div>
   {% endfor %}
 </div>

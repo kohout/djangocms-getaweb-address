@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-</head>
-<body>
+{% load i18n sekizai_tags staticfiles cmsaddress %}
 
-</body>
-</html>
+<h3>{% trans 'Filter list' %}</h3>
+<form action="." method="GET" class="djangocms_address_filter_form {% filter_via_ajax %}">
+  <input type="search" id="search" name="search" placeholder="{% trans 'Search' %}">
+  {% for tag in filter_tags %}
+    <p>
+      <input id="{{ tag.name }}" type="checkbox" name="tags" value="{{ tag.pk }}" >&nbsp;
+      <label for="{{ tag.name }}">{{ tag.name }}</label>
+    </p>
+  {% endfor %}
+  <button type="submit">Filter</button>
+</form>

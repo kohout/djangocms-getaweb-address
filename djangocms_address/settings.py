@@ -8,15 +8,6 @@ GEOCODING_OUTPUT_JSON = 'json'
 GEOCODING_OUTPUT_XML = 'xml'
 # --- end do-not-change ---
 
-
-# use bootstrap3 template or use normal template
-# bzw use config template
-
-# DEFAULT_CONFIG = getattr(settings, 'TINYMCE_DEFAULT_CONFIG',
-#         {'theme': "simple", 'relative_urls': False})
-
-
-
 # allow manual entry of latitude and longitude in forms
 # WARNING! if you set this to 'True', latitude and longitude will no longer be automatically re-fetched if
 # an address is changed. You will have to make sure that latitude and longitude are correct yourself!
@@ -35,6 +26,11 @@ IMG_OPTIONS_PREVIEW = getattr(settings, 'ADDRESS_IMG_OPTIONS_PREVIEW',
 # easy thumbnails settings for logo displays
 IMG_OPTIONS_LOGO = getattr(settings, 'ADDRESS_IMG_OPTIONS_LOGO',
                            {'size': (250, 55), 'crop': True, 'upscale': True})
+
+# if true, filter requests will be sent via ajax and the teaser and gmap containers will be updated.
+# if false, page reload will occur
+FILTER_USING_AJAX = getattr(settings, 'ADDRESS_FILTER_USING_AJAX',
+                            True)
 
 # --- GEOCODING SETTINGS ---
 # for more info see https://developers.google.com/maps/documentation/geocoding/intro

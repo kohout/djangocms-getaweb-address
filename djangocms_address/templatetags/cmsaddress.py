@@ -20,3 +20,7 @@ def gmaps_api_key():
     if settings.GEOCODING_KEY:
         return settings.GEOCODING_KEY_URL
     return ''
+
+@register.simple_tag()
+def filter_via_ajax():
+    return 'ajax_filter' if settings.FILTER_USING_AJAX else ''

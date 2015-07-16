@@ -1,2 +1,7 @@
+{% load i18n %}
+
+<div id="djangocms_address_noresults" style="display:none;">
+  <h3 style="text-align:center;">{% blocktrans %}No results.{% endblocktrans %}</h3>
+</div>
 {% include 'djangocms_address/gmap.html' with first=items|first %}
 {% include 'djangocms_address/teaser.html' %}

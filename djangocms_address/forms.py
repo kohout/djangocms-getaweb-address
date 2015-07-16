@@ -97,7 +97,6 @@ class LocationForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super(LocationForm, self).save(commit=False)
-        print instance.logo
         instance.latitude = self.lat
         instance.longitude = self.lng
         instance.formatted_address = self.formatted_address

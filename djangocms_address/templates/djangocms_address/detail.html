@@ -2,13 +2,19 @@
 
 {% include 'djangocms_address/gmap.html' %}
 
-<h1>{{ object.get_name }}</h1>
-{{ object|render_logo }}
-<p>{{ object.formatted_address }}</p>
-<p>{{ object.description }}</p>
-<p><a href="{{ object.link }}" target="_blank">{{ object.link }}</a></p>
-<p>
-  {% for tag in object.tags.all %}
-    {{ tag }}{% if not forloop.last %}, {% endif %}
-  {% endfor %}
-</p>
+<div class="djangocms_address_detail"
+     data-name="{{ object.get_name }}" data-url="{{ object.get_absolute_url }}"
+     data-lat="{{ object.latitude|stringformat:'f' }}" data-lng="{{ object.longitude|stringformat:'f' }}"
+     data-description="{{ object.description }}" data-formaddr="{{ object.formatted_address }}"
+    >
+  <h1>{{ object.get_name }}</h1>
+  {{ object|render_logo }}
+  <p>{{ object.formatted_address }}</p>
+  <p>{{ object.description }}</p>
+  <p><a href="{{ object.link }}" target="_blank">{{ object.link }}</a></p>
+  <p>
+    {% for tag in object.tags.all %}
+      {{ tag }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+</div>

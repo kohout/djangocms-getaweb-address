@@ -3,6 +3,7 @@ from cms.models.pluginmodel import CMSPlugin
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
+from django.db.models.query_utils import Q
 from django.utils.translation import ugettext as _
 from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.fields import ThumbnailerImageField
@@ -118,7 +119,7 @@ class Location(models.Model):
             return self.formatted_address
         return self.name
 
-    def get_lat_long_str(self):
+    def get_lat_lng_str(self):
         # e.g. 48.203493, 16.369168
         return '%s, %s' % (self.latitude, self.longitude)
 
@@ -134,6 +135,31 @@ class Location(models.Model):
 
 
 class LocationsList(CMSPlugin):
+    def filter_items(self, tags, search):
+        qs = Location.objects.all()
+        f = Q()
+
+        if tags:
+            f = Q(tags__in=tags)
+        if search:
+            if f is None:
+                f = Q(name__icontains=search) | Q(description__icontains=search) | \
+                    Q(formatted_address__icontains=search)
+            else:
+                f = f & (Q(name__icontains=search) | Q(description__icontains=search) |
+                         Q(formatted_address__icontains=search))
+
+        return qs.filter(f)
+
+    def get_items(self, context):
+        tags = context['request'].GET.get('tags', None)
+        search = context['request'].GET.get('search', None)
+        items = self.filter_items(tags, search)
+        print items
+        return items
+
+
+class TagList(CMSPlugin):
     def get_items(self):
-        items = Location.objects.all()
+        items = Tag.objects.all()
         return items

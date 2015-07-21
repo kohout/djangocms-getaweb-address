@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from cms.models.pluginmodel import CMSPlugin
-from cms.models.pagemodel import Site
+from cms.models.pagemodel import Site, Page
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
 from django.db.models.query_utils import Q
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from easy_thumbnails.fields import ThumbnailerImageField
 
@@ -58,11 +59,23 @@ class Location(models.Model):
                     u'original decor & multilingual guided tours."'),
         verbose_name=_(u'Description'))
 
-    link = models.URLField(
+    cms_link = models.ForeignKey(
+        Page,
+        blank=True, null=True,
+        help_text=_(u'A link to a page on this website, e.g. "oper-information".'),
+        verbose_name=_(u'CMS page link'))
+
+    external_link = models.URLField(
         blank=True, null=True,
         help_text=_(u'A link that provides further information about the location, e.g. '
                     u'"http://www.wiener-staatsoper.at/".'),
-        verbose_name=_(u'Link'))
+        verbose_name=_(u'External link'))
+
+    link_title = models.CharField(
+        max_length=255,
+        blank=True, null=True,
+        help_text=_(u'Title that is displayed and wrapped with either CMS page link or External link.'),
+        verbose_name=_(u'Link title'))
 
     tags = models.ManyToManyField(
         Tag,
@@ -123,9 +136,30 @@ class Location(models.Model):
             return self.formatted_address
         return self.name
 
+    @property
     def get_lat_lng_str(self):
         # e.g. 48.203493, 16.369168
         return '%s, %s' % (self.latitude, self.longitude)
+
+    def get_set_link(self):
+        if self.cms_link:
+            return self.cms_link.get_absolute_url()
+        elif self.external_link:
+            return self.external_link
+        else:
+            return None
+
+    def get_link_title(self):
+        return self.link_title if self.link_title else self.get_set_link()
+
+    @property
+    def get_link_str(self):
+        link = self.get_set_link()
+        if not link:
+            return ''
+
+        res = u''.join(['<a href="', link, '" target="_blank">', self.get_link_title(), '</a>'])
+        return mark_safe(res)
 
     def get_absolute_url(self):
         return reverse_lazy('location-detail', kwargs={'pk': self.pk})

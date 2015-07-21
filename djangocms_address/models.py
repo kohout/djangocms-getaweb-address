@@ -62,7 +62,7 @@ class Location(models.Model):
     cms_link = models.ForeignKey(
         Page,
         blank=True, null=True,
-        help_text=_(u'A link to a page on this website, e.g. "oper-information".'),
+        help_text=_(u'A link to a page on this website, e.g. "/oper-information/".'),
         verbose_name=_(u'CMS page link'))
 
     external_link = models.URLField(
@@ -74,7 +74,8 @@ class Location(models.Model):
     link_title = models.CharField(
         max_length=255,
         blank=True, null=True,
-        help_text=_(u'Title that is displayed and wrapped with either CMS page link or External link.'),
+        help_text=_(u'Title that is displayed and wrapped with either CMS page link or External link, e.g. '
+                    u'"More information".'),
         verbose_name=_(u'Link title'))
 
     tags = models.ManyToManyField(

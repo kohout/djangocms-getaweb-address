@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from cms.models.pluginmodel import CMSPlugin
-from django.conf import settings
+from cms.models.pagemodel import Site
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
 from django.db.models.query_utils import Q
 from django.utils.translation import ugettext as _
-from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.fields import ThumbnailerImageField
-from easy_thumbnails.files import get_thumbnailer
 
 
 class Tag(models.Model):
@@ -40,6 +38,12 @@ class Location(models.Model):
         blank=True, null=True,
         help_text=_(u'Name or title of location, e.g. "Opera House".'),
         verbose_name=_(u'Name'))
+
+    target_page = models.ForeignKey(
+        Site,
+        blank=True, null=True,
+        help_text=_(u'Location is associated with a certain page.'),
+        verbose_name=_(u'Target Page'))
 
     logo = ThumbnailerImageField(
         upload_to='djangocms_address/',
@@ -135,6 +139,18 @@ class Location(models.Model):
 
 
 class LocationsList(CMSPlugin):
+    title = models.CharField(
+        max_length=255,
+        blank=True, null=True,
+        help_text=_(u'The title that is displayed above the location list.'),
+        verbose_name=_(u'Title'))
+
+    target_page = models.ForeignKey(
+        Site,
+        blank=True, null=True,
+        help_text=_(u'Only display locations associated with this page.'),
+        verbose_name=_(u'Target Page'))
+
     def filter_items(self, tags, search):
         qs = Location.objects.all()
         f = Q()
@@ -160,6 +176,12 @@ class LocationsList(CMSPlugin):
 
 
 class TagList(CMSPlugin):
+    title = models.CharField(
+        max_length=255,
+        blank=True, null=True,
+        help_text=_(u'The title that is displayed above the tag list.'),
+        verbose_name=_(u'Title'))
+
     def get_items(self):
         items = Tag.objects.all()
         return items

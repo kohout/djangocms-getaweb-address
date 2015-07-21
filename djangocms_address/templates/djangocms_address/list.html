@@ -1,5 +1,6 @@
 {% load i18n %}
 
+{% if instance.title %}<h1>{{ instance.title }}</h1>{% endif %}
 <div id="djangocms_address_noresults" style="display:none;">
   <h3 style="text-align:center;">{% blocktrans %}No results.{% endblocktrans %}</h3>
 </div>

@@ -72,23 +72,35 @@ class LocationForm(forms.ModelForm):
                 self.lat = location['lat']
                 self.lng = location['lng']
 
-    def clean(self):
-        cleaned_data = super(LocationForm, self).clean()
+    def check_addr_set(self, cleaned_data):
         street = cleaned_data.get('street', None)
         zipcode = cleaned_data.get('zipcode', None)
         city = cleaned_data.get('city', None)
         state = cleaned_data.get('state', None)
         country = cleaned_data.get('country', None)
-        addr = {u'street': street, u'zipcode': zipcode, u'city': city, u'state': state, u'country': country}
-
-        latitude = cleaned_data.get('latitude', None)
-        longitude = cleaned_data.get('longitude', None)
 
         if not (street or zipcode or city or state or country):
             raise ValidationError('Please fill out at least one of the address fields!')
 
-        # check if address has changed
+        return {u'street': street, u'zipcode': zipcode, u'city': city,
+                u'state': state, u'country': country}
+
+    def check_link(self, cleaned_data):
+        cms_link = cleaned_data.get('cms_link', None)
+        external_link = cleaned_data.get('external_link', None)
+
+        if cms_link and external_link:
+            raise ValidationError('Please only enter a CMS page link OR an external link!')
+
+    def clean(self):
+        cleaned_data = super(LocationForm, self).clean()
+
+        self.check_link(cleaned_data)
+        addr = self.check_addr_set(cleaned_data)
         has_changed = self.address_has_changed(addr)
+
+        latitude = cleaned_data.get('latitude', None)
+        longitude = cleaned_data.get('longitude', None)
 
         # get lat/lng via google maps api and set them
         self.set_lat_lng(addr, latitude, longitude, has_changed)

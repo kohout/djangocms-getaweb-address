@@ -11,7 +11,7 @@
   {{ object|render_logo }}
   <p>{{ object.formatted_address }}</p>
   <p>{{ object.description }}</p>
-  <p><a href="{{ object.link }}" target="_blank">{{ object.link }}</a></p>
+  <p>{{ object.get_link_str }}</p>
   <p>
     {% for tag in object.tags.all %}
       {{ tag }}{% if not forloop.last %}, {% endif %}

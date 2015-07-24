@@ -25,7 +25,7 @@ IMG_OPTIONS_PREVIEW = getattr(settings, 'ADDRESS_IMG_OPTIONS_PREVIEW',
 
 # easy thumbnails settings for logo displays
 IMG_OPTIONS_LOGO = getattr(settings, 'ADDRESS_IMG_OPTIONS_LOGO',
-                           {'size': (250, 55), 'crop': True, 'upscale': True})
+                           {'size': (250, 200), 'crop': True, 'upscale': True})
 
 # if true, filter requests will be sent via ajax and the teaser and gmap containers will be updated.
 # if false, page reload will occur

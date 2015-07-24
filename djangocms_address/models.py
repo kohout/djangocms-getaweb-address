@@ -8,6 +8,12 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from easy_thumbnails.fields import ThumbnailerImageField
 
+try:
+    # >= Django 1.7
+    from django.contrib.sites.shortcuts import get_current_site
+except ImportError:
+    from django.contrib.sites.models import get_current_site
+
 
 class Tag(models.Model):
     """
@@ -40,11 +46,11 @@ class Location(models.Model):
         help_text=_(u'Name or title of location, e.g. "Opera House".'),
         verbose_name=_(u'Name'))
 
-    target_page = models.ForeignKey(
+    sites = models.ManyToManyField(
         Site,
         blank=True, null=True,
-        help_text=_(u'Location is associated with a certain page.'),
-        verbose_name=_(u'Target Page'))
+        help_text=_(u'Location is associated with a certain site.'),
+        verbose_name=_(u'Site'))
 
     logo = ThumbnailerImageField(
         upload_to='djangocms_address/',
@@ -180,12 +186,6 @@ class LocationsList(CMSPlugin):
         help_text=_(u'The title that is displayed above the location list.'),
         verbose_name=_(u'Title'))
 
-    target_page = models.ForeignKey(
-        Site,
-        blank=True, null=True,
-        help_text=_(u'Only display locations associated with this page.'),
-        verbose_name=_(u'Target Page'))
-
     def filter_items(self, tags, search):
         qs = Location.objects.all()
         f = Q()
@@ -206,7 +206,9 @@ class LocationsList(CMSPlugin):
         tags = context['request'].GET.get('tags', None)
         search = context['request'].GET.get('search', None)
         items = self.filter_items(tags, search)
-        print items
+
+        current_site = get_current_site(context['request'])
+        items = items.filter(sites__id=current_site.id)
         return items
 
 

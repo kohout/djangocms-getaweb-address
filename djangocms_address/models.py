@@ -212,7 +212,7 @@ class LocationsList(CMSPlugin):
         return items
 
 
-class TagList(CMSPlugin):
+class AddressTagList(CMSPlugin):
     title = models.CharField(
         max_length=255,
         blank=True, null=True,
@@ -222,3 +222,10 @@ class TagList(CMSPlugin):
     def get_items(self):
         items = Tag.objects.all()
         return items
+
+    def __unicode__(self):
+        return self.title or 'TagList'
+
+    class Meta:
+        verbose_name = _(u'Tag List Plugin')
+        verbose_name_plural = _(u'Tag List Plugins')

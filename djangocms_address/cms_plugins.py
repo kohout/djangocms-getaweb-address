@@ -2,7 +2,7 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.utils.translation import ugettext_lazy as _
-from djangocms_address.models import TagList
+from djangocms_address.models import AddressTagList
 
 from .models import LocationsList
 
@@ -19,7 +19,7 @@ class AddressPlugin(CMSPluginBase):
 
 
 class AddressFilterPlugin(CMSPluginBase):
-    model = TagList
+    model = AddressTagList
     name = _(u'Address Filter')
     render_template = 'djangocms_address/filter.html'
 

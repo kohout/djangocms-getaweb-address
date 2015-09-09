@@ -14,7 +14,7 @@
       {% if item.name %}
         <p>{{ item.formatted_address }}</p>
       {% endif %}
-      <p>{{ item.description }}</p>
+      <p>{{ item.description|safe }}</p>
       {% if item.tags %}
         {% trans 'Tags:' %}
         {% for tag in item.tags.all %}

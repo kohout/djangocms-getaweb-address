@@ -7,6 +7,7 @@ from django.db.models.query_utils import Q
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from easy_thumbnails.fields import ThumbnailerImageField
+from tinymce.models import HTMLField
 
 try:
     # >= Django 1.7
@@ -58,7 +59,7 @@ class Location(models.Model):
         help_text=_(u'Image of location.'),
         verbose_name=_(u'Logo'))
 
-    description = models.TextField(
+    description = HTMLField(
         blank=True, null=True,
         help_text=_(u'Description of the location, e.g. '
                     u'"World-famous opera house offering major productions, '

@@ -14,8 +14,8 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('render_preview', 'get_name', 'description')
-    list_display_links = ('render_preview', 'get_name')
+    list_display = ('render_preview', '_get_name', '_description')
+    list_display_links = ('render_preview', '_get_name')
     search_fields = ('name', 'description', 'street', 'zipcode', 'city', 'state',
                      'country', 'latitude', 'longitude')
     readonly_fields = ('render_preview', )
@@ -32,6 +32,15 @@ class LocationAdmin(admin.ModelAdmin):
             return u''
         return u'<img src="%s">' % thumb_url
 
+    def _get_name(self, location):
+        return location.get_name()
+
+    def _description(self, location):
+        return location.description
+
+    _get_name.short_description = _(u'Name')
+    _description.allow_tags = True
+    _description.short_description = _(u'Description')
     render_preview.allow_tags = True
     render_preview.short_description = _(u'Preview')
 

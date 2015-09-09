@@ -10,7 +10,7 @@
   <h1>{{ object.get_name }}</h1>
   {{ object|render_logo }}
   <p>{{ object.formatted_address }}</p>
-  <p>{{ object.description }}</p>
+  <p>{{ object.description|safe }}</p>
   <p>{{ object.get_link_str }}</p>
   <p>
     {% for tag in object.tags.all %}
